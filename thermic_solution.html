@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Solution détaillée de la diffusion thermique</title>
+  <!-- Chargement de MathJax pour l'affichage des formules LaTeX -->
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js">
+  </script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      margin: 40px;
+      background-color: #f9f9f9;
+      color: #333;
+    }
+    h1, h2, h3 {
+      color: #444;
+    }
+    pre {
+      background-color: #eee;
+      border: 1px solid #ddd;
+      padding: 10px;
+      overflow-x: auto;
+    }
+    code {
+      font-family: Consolas, monospace;
+    }
+    .formula {
+      background-color: #fff;
+      padding: 10px;
+      border: 1px dashed #ccc;
+      margin: 10px 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>Solution détaillée de la diffusion thermique en 1D</h1>
+  
+  <h2>1. Énoncé du problème</h2>
+  <p>
+    On considère l'équation de diffusion thermique :
+  </p>
+  <div class="formula">
+    $$\frac{\partial T(z,t)}{\partial t} = K_T\,\frac{\partial^2 T(z,t)}{\partial z^2}$$
+  </div>
+  <p>
+    avec les conditions aux limites et initiales :
+  </p>
+  <ul>
+    <li><strong>Condition initiale :</strong> $$T(z,0) = T_{\text{moyen}}$$</li>
+    <li><strong>À la surface :</strong> $$T(0,t) = T_0$$</li>
+    <li><strong>À l'infini :</strong> $$T(z\to\infty,t) = T_{\text{moyen}}$$</li>
+  </ul>
+  
+  <h2>2. Réduction du problème par changement de variable</h2>
+  <p>
+    Pour ramener la condition à l'infini à zéro, on définit :
+  </p>
+  <div class="formula">
+    $$u(z,t) = T(z,t) - T_{\text{moyen}}$$
+  </div>
+  <p>
+    Ainsi, <em>u(z,t)</em> satisfait :
+  </p>
+  <ul>
+    <li>
+      <strong>Équation :</strong> 
+      $$\frac{\partial u}{\partial t} = K_T\,\frac{\partial^2 u}{\partial z^2}$$ 
+      (puisque \(T_{\text{moyen}}\) est constant).
+    </li>
+    <li>
+      <strong>Condition initiale :</strong> 
+      $$u(z,0) = T(z,0)-T_{\text{moyen}} = T_{\text{moyen}}-T_{\text{moyen}} = 0$$
+    </li>
+    <li>
+      <strong>À la surface :</strong> 
+      $$u(0,t) = T(0,t)-T_{\text{moyen}} = T_0 - T_{\text{moyen}}$$
+    </li>
+    <li>
+      <strong>À l'infini :</strong> 
+      $$u(z\to\infty,t) = T(z\to\infty,t)-T_{\text{moyen}} = 0$$
+    </li>
+  </ul>
+  
+  <h2>3. Transformation de Laplace</h2>
+  <p>
+    On applique la transformation de Laplace par rapport à \(t\) à \(u(z,t)\) :
+  </p>
+  <div class="formula">
+    $$\bar{u}(z,s) = \mathcal{L}\{u(z,t)\} = \int_0^\infty e^{-st} u(z,t)\, dt$$
+  </div>
+  <p>
+    Les transformations des dérivées sont :
+  </p>
+  <ul>
+    <li>
+      $$\mathcal{L}\left\{\frac{\partial u}{\partial t}\right\} = s\,\bar{u}(z,s) - u(z,0) = s\,\bar{u}(z,s)$$
+      (puisque \(u(z,0)=0\)).
+    </li>
+    <li>
+      $$\mathcal{L}\left\{\frac{\partial^2 u}{\partial z^2}\right\} = \frac{d^2 \bar{u}}{dz^2}$$
+    </li>
+  </ul>
+  <p>
+    L'équation se transforme alors en :
+  </p>
+  <div class="formula">
+    $$s\,\bar{u}(z,s) = K_T\,\frac{d^2 \bar{u}}{dz^2}$$
+  </div>
+  <p>
+    Ce qui s'écrit sous la forme :
+  </p>
+  <div class="formula">
+    $$\frac{d^2 \bar{u}}{dz^2} - \frac{s}{K_T}\,\bar{u}(z,s) = 0$$
+  </div>
+  
+  <h2>4. Résolution de l'EDO</h2>
+  <p>
+    On considère l'EDO suivante :
+  </p>
+  <div class="formula">
+    $$\frac{d^2 \bar{u}}{dz^2} - \lambda^2\,\bar{u}(z,s) = 0,\quad \text{où } \lambda^2 = \frac{s}{K_T}$$
+  </div>
+  <p>
+    La solution générale est :
+  </p>
+  <div class="formula">
+    $$\bar{u}(z,s) = A(s)\,e^{-\lambda z} + B(s)\,e^{\lambda z}$$
+  </div>
+  <p>
+    Pour satisfaire la condition à l'infini \(u(z\to\infty,t)=0\), on impose \(B(s)=0\) (car \(e^{\lambda z}\) diverge lorsque \(z\to\infty\)).  
+    De plus, à \(z=0\) :
+  </p>
+  <div class="formula">
+    $$\bar{u}(0,s) = \frac{T_0-T_{\text{moyen}}}{s} = A(s)$$
+  </div>
+  <p>
+    La solution en domaine de Laplace est donc :
+  </p>
+  <div class="formula">
+    $$\bar{u}(z,s) = \frac{T_0-T_{\text{moyen}}}{s}\,e^{-z\sqrt{\frac{s}{K_T}}}$$
+  </div>
+  
+  <h2>5. Transformation inverse de Laplace</h2>
+  <p>
+    On utilise la formule classique :
+  </p>
+  <div class="formula">
+    $$\mathcal{L}^{-1}\left\{\frac{1}{s}\,e^{-a\sqrt{s}}\right\} = \operatorname{erfc}\left(\frac{a}{2\sqrt{t}}\right)$$
+  </div>
+  <p>
+    Dans notre cas, \(a = \frac{z}{\sqrt{K_T}}\).  
+    Ainsi, la solution pour \(u(z,t)\) est :
+  </p>
+  <div class="formula">
+    $$u(z,t) = (T_0-T_{\text{moyen}})\,\operatorname{erfc}\left(\frac{z}{2\sqrt{K_T\,t}}\right)$$
+  </div>
+  
+  <h2>6. Retour à la variable originale</h2>
+  <p>
+    Comme \(u(z,t) = T(z,t)-T_{\text{moyen}}\), on a :
+  </p>
+  <div class="formula">
+    $$T(z,t) = T_{\text{moyen}} + (T_0-T_{\text{moyen}})\,\operatorname{erfc}\left(\frac{z}{2\sqrt{K_T\,t}}\right)$$
+  </div>
+  
+  <h2>Résultat final</h2>
+  <div class="formula">
+    $$\boxed{T(z,t) = T_{\text{moyen}} + \left(T_0-T_{\text{moyen}}\right)\,\operatorname{erfc}\left(\frac{z}{2\sqrt{K_T\,t}}\right)}$$
+  </div>
+  
+  <h2>Exemple numérique en Python</h2>
+  <p>
+    Prenons les paramètres suivants :
+  </p>
+  <ul>
+    <li>\(T_0 = 20\) °C</li>
+    <li>\(T_{\text{moyen}} = 10\) °C</li>
+    <li>\(K_T = 2 \times 10^{-3}\) cm²/s</li>
+    <li>t = 20 000 s</li>
+  </ul>
+  <p>
+    Le code Python ci-dessous calcule et affiche le profil de température :
+  </p>
+  <pre>
+<code>import numpy as np
+import matplotlib.pyplot as plt
+from scipy.special import erfc
+
+# Paramètres
+T0 = 20.0         # Température à la surface en °C
+T_moyen = 10.0    # Température moyenne en profondeur en °C
+KT = 2e-3         # Diffusivité thermique en cm²/s
+t = 20000         # Temps en secondes
+
+# Définir un vecteur de profondeur z en cm
+z = np.linspace(0, 50, 500)  # de 0 à 50 cm
+
+# Calcul de la distribution de température T(z,t)
+T = T_moyen + (T0 - T_moyen) * erfc(z / (2 * np.sqrt(KT * t)))
+
+# Tracé du profil de température
+plt.figure(figsize=(8, 5))
+plt.plot(z, T, label=f't = {t} s')
+plt.xlabel('Profondeur z (cm)')
+plt.ylabel('Température T(z,t) (°C)')
+plt.title('Distribution de température dans le sol')
+plt.legend()
+plt.grid(True)
+plt.show()</code>
+  </pre>
+  
+  <p>
+    Ce code permet de visualiser comment la température varie en fonction de la profondeur pour un sol où la température de surface est de 20 °C et la température en profondeur tend vers 10 °C.
+  </p>
+  
+</body>
+</html>
